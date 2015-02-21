@@ -1,1 +1,1 @@
-# sudoku-web
+# Sudoku (sudoku-web)
