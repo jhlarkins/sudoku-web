@@ -26,18 +26,37 @@ function toSquareId(row, column) {
 function populateBoard() {
     var row;
     var column;
-    var square;
     var value;
+    var tr;
+    var td;
+    var tbody = $('#board').find('tbody');
     for (row = 0; row < board.size(); row++) {
+        tr = $('<tr>');
         for (column = 0; column < board.size(); ++column) {
-            square = $(toSquareId(row, column));
+            td = $('<td>');
+            td.attr('id', toSquareId(row, column).substr(1));
+            td.addClass('square');
+            if (row % board.base() === 0) {
+                td.addClass('topSquare');
+            }
+            if (row % board.base() === board.base() - 1) {
+                td.addClass('bottomSquare');
+            }
+            if (column % board.base() === 0) {
+                td.addClass('leftSquare');
+            }
+            if (column % board.base() === board.base() - 1) {
+                td.addClass('rightSquare');
+            }
             if (board.isHardCoded(row, column)) {
-                square.addClass(HARD_CODED_VALUE);
+                td.addClass(HARD_CODED_VALUE);
             }
             value = board.get(row, column);
-            square.text(value !== null ? value : '');
-            square.click(selectSquare.bind(null, row, column));
+            td.text(value !== null ? value : '');
+            td.click(selectSquare.bind(null, row, column));
+            tr.append(td);
         }
+        tbody.append(tr);
     }
 }
 

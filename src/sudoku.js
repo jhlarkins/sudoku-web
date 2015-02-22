@@ -11,6 +11,9 @@ function createBoard(base, values) {
     };
     prepareBoard(size, values);
     return {
+        base: function() {
+            return base;
+        },
         isHardCoded: function(row, column) {
             validateRowAndColumn(row, column);
             return values[row][column].hardCoded;

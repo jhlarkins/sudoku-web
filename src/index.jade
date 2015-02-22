@@ -5,17 +5,6 @@ html(lang='en')
         link(rel='stylesheet', type='text/css' href='style.css')
     body
         h1='Sudoku'
-        table(class='board')
+        table(id='board', class='board')
             tbody
-                - var base = 3
-                - var size = base * base;
-                - for (var row = 0; row < size; row++)
-                    tr
-                        - for (var column = 0; column < size; column++)
-                            - var classes = ['square']
-                            - if (row % base === 0) classes.push('topSquare')
-                            - if (row % base === base - 1) classes.push('bottomSquare')
-                            - if (column % base === 0) classes.push('leftSquare')
-                            - if (column % base === base - 1) classes.push('rightSquare')
-                            td(id='square_#{row}_#{column}', class=classes)
         script(src='bundle.js', type='text/javascript')
