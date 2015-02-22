@@ -6,3 +6,5 @@ declare -r OUT="$DIR/out"
 
 jade --pretty "$SRC" --out "$OUT"
 sass "$SRC/style.sass" "$OUT/style.css"
+
+browserify --debug "$SRC/main.js" -o "$OUT/bundle.js"
