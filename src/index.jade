@@ -7,7 +7,14 @@ html(lang='en')
         h1='Sudoku'
         table(class='board')
             tbody
-                - for (var row = 0; row < 9; row++)
+                - var base = 3
+                - var size = base * base;
+                - for (var row = 0; row < size; row++)
                     tr
-                        - for (var column = 0; column < 9; column++)
-                            td(id='square_#{row}_#{column}', class='square')
+                        - for (var column = 0; column < size; column++)
+                            - var classes = ['square']
+                            - if (row % base === 0) classes.push('topSquare')
+                            - if (row % base === base - 1) classes.push('bottomSquare')
+                            - if (column % base === 0) classes.push('leftSquare')
+                            - if (column % base === base - 1) classes.push('rightSquare')
+                            td(id='square_#{row}_#{column}', class=classes)
