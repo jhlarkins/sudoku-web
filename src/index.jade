@@ -1,0 +1,13 @@
+doctype html
+html(lang='en')
+    head
+        title='Sudoku'
+        link(rel='stylesheet', type='text/css' href='style.css')
+    body
+        h1='Sudoku'
+        table(class='board')
+            tbody
+                - for (var row = 0; row < 9; row++)
+                    tr
+                        - for (var column = 0; column < 9; column++)
+                            td(id='square_#{row}_#{column}', class='square')

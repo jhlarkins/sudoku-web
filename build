@@ -1,0 +1,8 @@
+#!/bin/bash
+
+declare -r DIR="$(dirname $0)"
+declare -r SRC="$DIR/src"
+declare -r OUT="$DIR/out"
+
+jade --pretty "$SRC" --out "$OUT"
+sass "$SRC/style.sass" "$OUT/style.css"
