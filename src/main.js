@@ -1,4 +1,5 @@
 var $ = require('jquery-browserify');
+var position = require('./position.js');
 var sudoku = require('./sudoku.js');
 
 var HARD_CODED_VALUE = 'hardCodedValue';
@@ -67,17 +68,17 @@ function selectSquare(row, column) {
                 .removeClass(SELECTED_VALUE);
     }
     $(toSquareId(row, column)).addClass(SELECTED_VALUE);
-    selected = {row: row, column: column};
+    selected = position(row, column);
 }
 
 function checkGameStatus() {
     var i;
-    var position;
+    var p;
     var status = board.statusSnapshot();
     $('.incorrectValue').removeClass('incorrectValue');
     for (i = 0; i < status.conflicts.length; i++) {
-        position = status.conflicts[i];
-        $(toSquareId(position.row, position.column)).addClass('incorrectValue');
+        p = status.conflicts[i];
+        $(toSquareId(p.row, p.column)).addClass('incorrectValue');
     }
 }
 
