@@ -80,6 +80,16 @@ function checkGameStatus() {
         p = status.conflicts[i];
         $(toSquareId(p.row, p.column)).addClass('incorrectValue');
     }
+    if (status.allFilled && status.conflicts.length === 0) {
+        endGame();
+    }
+}
+
+function endGame() {
+    var element;
+    console.log('Victory!');
+    element = $('<div>');
+    element.text('Victory!');
 }
 
 $(document).keydown(function(event) {
@@ -116,6 +126,8 @@ $(document).keypress(function(event) {
         num = ch - ZERO_CHAR;
         board.set(selected.row, selected.column, num);
         square.text(num);
+    } else if (ch === 65) {
+        endGame();
     }
     checkGameStatus();
 });
