@@ -70,6 +70,17 @@ function selectSquare(row, column) {
     selected = {row: row, column: column};
 }
 
+function checkGameStatus() {
+    var i;
+    var position;
+    var status = board.statusSnapshot();
+    $('.incorrectValue').removeClass('incorrectValue');
+    for (i = 0; i < status.conflicts.length; i++) {
+        position = status.conflicts[i];
+        $(toSquareId(position.row, position.column)).addClass('incorrectValue');
+    }
+}
+
 $(document).keydown(function(event) {
     var key = event.keyCode;
     if (selected === undefined) {
@@ -98,12 +109,14 @@ $(document).keypress(function(event) {
     key = event.keyCode;
     ch = event.charCode;
     if (key === BACKSPACE || key === DELETE) {
+        board.set(selected.row, selected.column, null);
         square.text('');
     } else if (ch >= ONE_CHAR && ch <= NINE_CHAR) {
         num = ch - ZERO_CHAR;
         board.set(selected.row, selected.column, num);
-        square.text(num); 
+        square.text(num);
     }
+    checkGameStatus();
 });
 
 board = sudoku(3).randomBoard();

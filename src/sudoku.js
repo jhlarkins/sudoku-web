@@ -1,3 +1,5 @@
+var position = require('./position.js');
+
 function createBoard(base, values) {
     var size = base * base;
     var validateRowAndColumn = function(row, column) {
@@ -33,6 +35,7 @@ function createBoard(base, values) {
         size: function() {
             return size;  
         },
+        statusSnapshot: evaluateStatus.bind(null, base, size, values)
     };
 }
 
@@ -56,6 +59,115 @@ function prepareBoard(size, values) {
             };
         }
     }
+}
+
+function evaluateStatus(base, size, values) {
+    return {
+        allFilled: countFilledSquares(values) === size * size,
+        conflicts: findAllConflicts(base, size, values)
+    };
+}
+
+function countFilledSquares(values) {
+    var row;
+    var column;
+    var total = 0;
+    for (row = 0; row < values.length; row++) {
+        for (column = 0; column < values[row].length; column++) {
+            if (values[row][column].value !== null) {
+                total++;
+            }
+        }
+    }
+    return total;
+}
+
+function findAllConflicts(base, size, values) {
+    var conflicts = [];
+
+    function findRowConflicts() {
+        var row;
+        var column;
+        var value;
+        var visited;
+        for (row = 0; row < size; row++) {
+            visited = {};
+            for (column = 0; column < size; column++) {
+                value = values[row][column].value;
+                if (value === null) {
+                    continue;
+                } else if (!(value in visited)) {
+                    visited[value] = [];
+                }
+                visited[value].push(position(row, column));
+            }
+            processConflictingPositions(visited);
+        }
+    }
+    
+    function findColumnConflicts() {
+        var row;
+        var column;
+        var value;
+        var visited;
+        for (column = 0; column < size; column++) {
+            visited = {};
+            for (row = 0; row < size; row++) {
+                value = values[row][column].value;
+                if (value === null) {
+                    continue;
+                } else if (!(value in visited)) {
+                    visited[value] = [];
+                }
+                visited[value].push(position(row, column));
+            }
+            processConflictingPositions(visited);
+        }
+    }
+
+    function findAllSubBoardConflicts() {
+        var row;
+        var column;
+        for (row = 0; row < size; row += base) {
+            for (column = 0; column < size; column += base) {
+                findSubBoardConflicts(row, column);
+            }
+        }
+    }
+
+    function findSubBoardConflicts(rowStart, columnStart) {
+        var row;
+        var column;
+        var value;
+        var visited = {};
+        for (row = rowStart; row < rowStart + base; row++) {
+            for (column = columnStart; column < columnStart + base; column++) {
+                value = values[row][column].value;
+                if (value === null) {
+                    continue;
+                } else if (!(value in visited)) {
+                    visited[value] = [];
+                }
+                visited[value].push(position(row, column));
+            }
+        }
+        processConflictingPositions(visited);
+    }
+
+    function processConflictingPositions(visited) {
+        var n;
+        for (n = 1; n <= size; n++) {
+            if (n in visited && visited[n].length > 1) {
+                conflicts = conflicts.concat(visited[n]);
+            }
+        }
+    }
+
+    findRowConflicts();
+    findColumnConflicts();
+    findAllSubBoardConflicts();
+
+    return conflicts;
 }
 
 function createRandomBoard(base) {
