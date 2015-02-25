@@ -19,6 +19,7 @@ var NINE_CHAR = ZERO_CHAR + 9;
 
 var board;
 var selected;
+var allowKeyEdits = false;
 
 function toSquareId(row, column) {
     return '#square_' + row + '_' + column;
@@ -32,6 +33,7 @@ function startNewGame() {
     var td;
     var tbody;
 
+    $('#title').text('Sudoku');
     setNumberButtonsEnabled(false);
     setDeleteButtonEnabled(false);
     setResetButtonEnabled(false);
@@ -67,6 +69,7 @@ function startNewGame() {
         }
         tbody.append(tr);
     }
+    allowKeyEdits = true;
 }
 
 function selectSquare(row, column) {
@@ -99,10 +102,11 @@ function checkGameStatus() {
 }
 
 function endGame() {
-    var element;
-    console.log('Victory!');
-    element = $('<div>');
-    element.text('Victory!');
+    $('#title').text('You Win!');
+    setNumberButtonsEnabled(false);
+    setDeleteButtonEnabled(false);
+    setResetButtonEnabled(false);
+    allowKeyEdits = false;
 }
 
 function setNumberButtonsEnabled(enabled) {
@@ -159,19 +163,17 @@ $(document).keypress(function(event) {
     square = $(toSquareId(selected.row, selected.column));
     key = event.keyCode;
     ch = event.charCode;
-    if (key === BACKSPACE || key === DELETE) {
+    if (allowKeyEdits && (key === BACKSPACE || key === DELETE)) {
         board.set(selected.row, selected.column, null);
         square.text('');
         setNumberButtonsEnabled(false);
         setDeleteButtonEnabled(false);
-    } else if (ch >= ONE_CHAR && ch <= NINE_CHAR) {
+    } else if (allowKeyEdits && (ch >= ONE_CHAR && ch <= NINE_CHAR)) {
         num = ch - ZERO_CHAR;
         board.set(selected.row, selected.column, num);
         square.text(num);
         setNumberButtonsEnabled(true);
         setDeleteButtonEnabled(true);
-    } else if (ch === 65) {
-        endGame();
     }
     checkGameStatus();
 });
@@ -188,6 +190,20 @@ $('input[id$="NumberButton"]').click(function(event) {
     square.text(num);
     setNumberButtonsEnabled(true);
     setDeleteButtonEnabled(true);
+    checkGameStatus();
+});
+
+$('#deleteButton').click(function() {
+    var square;
+    if (selected === undefined ||
+            board.isHardCoded(selected.row, selected.column)) {
+        return;
+    }
+    square = $(toSquareId(selected.row, selected.column));
+    board.set(selected.row, selected.column, null);
+    square.text('');
+    setNumberButtonsEnabled(true);
+    setDeleteButtonEnabled(false);
     checkGameStatus();
 });
 
