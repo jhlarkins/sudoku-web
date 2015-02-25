@@ -24,13 +24,21 @@ function toSquareId(row, column) {
     return '#square_' + row + '_' + column;
 }
 
-function populateBoard() {
+function startNewGame() {
     var row;
     var column;
     var value;
     var tr;
     var td;
-    var tbody = $('#board').find('tbody');
+    var tbody;
+
+    setNumberButtonsEnabled(false);
+    setDeleteButtonEnabled(false);
+    setResetButtonEnabled(false);
+
+    board = sudoku(3).randomBoard();
+    tbody = $('#board').find('tbody');
+    tbody.empty();
     for (row = 0; row < board.size(); row++) {
         tr = $('<tr>');
         for (column = 0; column < board.size(); ++column) {
@@ -71,7 +79,7 @@ function selectSquare(row, column) {
     $(toSquareId(row, column)).addClass(SELECTED_VALUE);
     editable = !board.isHardCoded(row, column);
     setNumberButtonsEnabled(editable);
-    selectDeleteButtonEnabled(editable && board.get(row, column) !== null);
+    setDeleteButtonEnabled(editable && board.get(row, column) !== null);
     selected = position(row, column);
 }
 
@@ -79,6 +87,7 @@ function checkGameStatus() {
     var i;
     var p;
     var status = board.statusSnapshot();
+    setResetButtonEnabled(status.numFilled > board.hardCodedCount());
     $('.incorrectValue').removeClass('incorrectValue');
     for (i = 0; i < status.conflicts.length; i++) {
         p = status.conflicts[i];
@@ -100,8 +109,27 @@ function setNumberButtonsEnabled(enabled) {
     return $('input[id$="NumberButton"]').prop('disabled', !enabled);
 }
 
-function selectDeleteButtonEnabled(enabled) {
+function setDeleteButtonEnabled(enabled) {
     return $('#deleteButton').prop('disabled', !enabled);
+}
+
+function setResetButtonEnabled(enabled) {
+    return $('#resetButton').prop('disabled', !enabled);
+}
+
+function resetGame() {
+    var row;
+    var column;
+    for (row = 0; row < board.size(); row++) {
+        for (column = 0; column < board.size(); column++) {
+            if (!board.isHardCoded(row, column)) {
+                board.set(row, column, null);
+                $(toSquareId(row, column)).text('');
+            }
+        }
+    }
+    $('.incorrectValue').removeClass('incorrectValue');
+    setResetButtonEnabled(false);
 }
 
 $(document).keydown(function(event) {
@@ -135,21 +163,40 @@ $(document).keypress(function(event) {
         board.set(selected.row, selected.column, null);
         square.text('');
         setNumberButtonsEnabled(false);
-        selectDeleteButtonEnabled(false);
+        setDeleteButtonEnabled(false);
     } else if (ch >= ONE_CHAR && ch <= NINE_CHAR) {
         num = ch - ZERO_CHAR;
         board.set(selected.row, selected.column, num);
         square.text(num);
         setNumberButtonsEnabled(true);
-        selectDeleteButtonEnabled(true);
+        setDeleteButtonEnabled(true);
     } else if (ch === 65) {
         endGame();
     }
     checkGameStatus();
 });
 
-setNumberButtonsEnabled(false);
-selectDeleteButtonEnabled(false);
+$('input[id$="NumberButton"]').click(function(event) {
+    var square;
+    var num = parseInt(event.target.value);
+    if (selected === undefined ||
+            board.isHardCoded(selected.row, selected.column)) {
+        return;
+    }
+    square = $(toSquareId(selected.row, selected.column));
+    board.set(selected.row, selected.column, num);
+    square.text(num);
+    setNumberButtonsEnabled(true);
+    setDeleteButtonEnabled(true);
+    checkGameStatus();
+});
 
-board = sudoku(3).randomBoard();
-populateBoard();
+$('#resetButton').click(function() {
+    resetGame();
+});
+
+$('#newGameButton').click(function() {
+    startNewGame();
+});
+
+startNewGame();

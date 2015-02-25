@@ -11,7 +11,7 @@ function createBoard(base, values) {
                     ', got ' + column);
         }
     };
-    prepareBoard(size, values);
+    var hardCodedCount = prepareBoard(size, values);
     return {
         base: function() {
             return base;
@@ -19,6 +19,9 @@ function createBoard(base, values) {
         isHardCoded: function(row, column) {
             validateRowAndColumn(row, column);
             return values[row][column].hardCoded;
+        },
+        hardCodedCount: function() {
+            return hardCodedCount;
         },
         get: function(row, column) {
             validateRowAndColumn(row, column);
@@ -43,6 +46,7 @@ function prepareBoard(size, values) {
     var row;
     var column;
     var value;
+    var hardCodedCount = 0;
     if (values.length !== size) {
         throw new Error(values.length + ' does not match size ' + size);
     }
@@ -57,14 +61,18 @@ function prepareBoard(size, values) {
                 value: value !== 0 ? value : null,
                 hardCoded: value !== 0
             };
+            hardCodedCount += value !== 0 ? 1 : 0;
         }
     }
+    return hardCodedCount;
 }
 
 function evaluateStatus(base, size, values) {
+    var numFilled = countFilledSquares(values);
     return {
         allFilled: countFilledSquares(values) === size * size,
-        conflicts: findAllConflicts(base, size, values)
+        conflicts: findAllConflicts(base, size, values),
+        numFilled: numFilled
     };
 }
 
