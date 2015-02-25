@@ -19,7 +19,7 @@ var NINE_CHAR = ZERO_CHAR + 9;
 
 var board;
 var selected;
-var allowKeyEdits = false;
+var allowEdits = false;
 
 function toSquareId(row, column) {
     return '#square_' + row + '_' + column;
@@ -69,7 +69,7 @@ function startNewGame() {
         }
         tbody.append(tr);
     }
-    allowKeyEdits = true;
+    allowEdits = true;
 }
 
 function selectSquare(row, column) {
@@ -81,8 +81,8 @@ function selectSquare(row, column) {
     }
     $(toSquareId(row, column)).addClass(SELECTED_VALUE);
     editable = !board.isHardCoded(row, column);
-    setNumberButtonsEnabled(editable);
-    setDeleteButtonEnabled(editable && board.get(row, column) !== null);
+    setNumberButtonsEnabled(allowEdits && editable);
+    setDeleteButtonEnabled(allowEdits && editable && board.get(row, column) !== null);
     selected = position(row, column);
 }
 
@@ -106,7 +106,7 @@ function endGame() {
     setNumberButtonsEnabled(false);
     setDeleteButtonEnabled(false);
     setResetButtonEnabled(false);
-    allowKeyEdits = false;
+    allowEdits = false;
 }
 
 function setNumberButtonsEnabled(enabled) {
@@ -163,12 +163,12 @@ $(document).keypress(function(event) {
     square = $(toSquareId(selected.row, selected.column));
     key = event.keyCode;
     ch = event.charCode;
-    if (allowKeyEdits && (key === BACKSPACE || key === DELETE)) {
+    if (allowEdits && (key === BACKSPACE || key === DELETE)) {
         board.set(selected.row, selected.column, null);
         square.text('');
         setNumberButtonsEnabled(false);
         setDeleteButtonEnabled(false);
-    } else if (allowKeyEdits && (ch >= ONE_CHAR && ch <= NINE_CHAR)) {
+    } else if (allowEdits && (ch >= ONE_CHAR && ch <= NINE_CHAR)) {
         num = ch - ZERO_CHAR;
         board.set(selected.row, selected.column, num);
         square.text(num);
@@ -188,7 +188,6 @@ $('input[id$="NumberButton"]').click(function(event) {
     square = $(toSquareId(selected.row, selected.column));
     board.set(selected.row, selected.column, num);
     square.text(num);
-    setNumberButtonsEnabled(true);
     setDeleteButtonEnabled(true);
     checkGameStatus();
 });
