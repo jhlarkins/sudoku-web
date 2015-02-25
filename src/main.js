@@ -62,12 +62,16 @@ function populateBoard() {
 }
 
 function selectSquare(row, column) {
+    var editable;
     if (selected !== undefined &&
             !(selected.row === row && selected.column === column)) {
         $(toSquareId(selected.row, selected.column))
                 .removeClass(SELECTED_VALUE);
     }
     $(toSquareId(row, column)).addClass(SELECTED_VALUE);
+    editable = !board.isHardCoded(row, column);
+    setNumberButtonsEnabled(editable);
+    selectDeleteButtonEnabled(editable && board.get(row, column) !== null);
     selected = position(row, column);
 }
 
@@ -90,6 +94,14 @@ function endGame() {
     console.log('Victory!');
     element = $('<div>');
     element.text('Victory!');
+}
+
+function setNumberButtonsEnabled(enabled) {
+    return $('input[id$="NumberButton"]').prop('disabled', !enabled);
+}
+
+function selectDeleteButtonEnabled(enabled) {
+    return $('#deleteButton').prop('disabled', !enabled);
 }
 
 $(document).keydown(function(event) {
@@ -122,15 +134,22 @@ $(document).keypress(function(event) {
     if (key === BACKSPACE || key === DELETE) {
         board.set(selected.row, selected.column, null);
         square.text('');
+        setNumberButtonsEnabled(false);
+        selectDeleteButtonEnabled(false);
     } else if (ch >= ONE_CHAR && ch <= NINE_CHAR) {
         num = ch - ZERO_CHAR;
         board.set(selected.row, selected.column, num);
         square.text(num);
+        setNumberButtonsEnabled(true);
+        selectDeleteButtonEnabled(true);
     } else if (ch === 65) {
         endGame();
     }
     checkGameStatus();
 });
+
+setNumberButtonsEnabled(false);
+selectDeleteButtonEnabled(false);
 
 board = sudoku(3).randomBoard();
 populateBoard();
