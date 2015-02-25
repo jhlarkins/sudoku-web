@@ -5,7 +5,21 @@ html(lang='en')
         title='Sudoku'
         link(rel='stylesheet', type='text/css' href='style.css')
     body
-        h1='Sudoku'
-        table(id='board', class='board')
+        h1(align='center')='Sudoku'
+        table(id='board', class='board', align='center')
             tbody
+        table(align='center')
+            tbody
+                tr
+                    td(width='50%')
+                        - for (var i = 1; i <= 9; i++)
+                            input(id='#{i}button' type='button' value='#{i}')
+                            - if (i % 3 === 0)
+                                br
+                    td(width='50%')
+                        input(id='deleteButton' type='button' value='Delete Value')
+                        br
+                        input(id='resetButton' type='button' value='Reset Game')
+                        br
+                        input(id='newGameButton' type='button' value='New Game')
         script(src='bundle.js', type='text/javascript')
