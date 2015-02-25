@@ -1,10 +1,56 @@
 #!/bin/bash
 
+print_help() {
+    echo "Usage: $(basename $0) [OPTION]..."
+    echo "Builds project"
+    echo ""
+    echo "Options"
+    echo "  -d --debug Build project in debug mode"
+    echo "  -h --help  Prints this help message"
+    echo "  -w --watch Continously monitors project for changes. Use CTRL+D to"
+    echo "             exit"
+}
+
 declare -r DIR="$(dirname $0)"
 declare -r SRC="$DIR/src"
 declare -r OUT="$DIR/out"
+declare -i MODE=0
+declare -a JADE_OPTIONS=()
+declare -a BROWSERIFY_OPTIONS=()
 
-jade --pretty "$SRC" --out "$OUT"
-sass "$SRC/style.sass" "$OUT/style.css"
+while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+        -d|--debug)
+            JADE_OPTIONS+="--pretty"
+            BROWSERIFY_OPTIONS+="--debug"
+            ;;
+        -h|--help)
+            print_help
+            exit
+            ;;
+        -w|--watch)
+            MODE=1
+            ;;
+        *) echo "Unrecognized option $1" >&2
+        exit 1
+    esac
+    shift
+done
 
-browserify --debug "$SRC/main.js" -o "$OUT/bundle.js"
+JADE_OPTIONS+=("$SRC" --out "$OUT")
+BROWSERIFY_OPTIONS+=("$SRC/main.js" -o "$OUT/bundle.js")
+
+if (($MODE == 0)); then
+	jade ${JADE_OPTIONS[@]}
+	sass "$SRC/style.sass" "$OUT/style.css"
+	browserify ${BROWSERIFY_OPTIONS[@]}
+	exit
+fi
+
+declare -a PIDS=()
+jade --watch ${JADE_OPTIONS[@]} &
+# Jade killed when shell exits
+sass --watch "$SRC/style.sass:$OUT/style.css" &
+PIDS+=($!)
+trap "kill ${PIDS[@]}" SIGINT SIGTERM
+watchify ${BROWSERIFY_OPTIONS[@]}
