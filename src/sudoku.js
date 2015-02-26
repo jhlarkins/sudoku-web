@@ -70,7 +70,7 @@ function prepareBoard(size, values) {
 function evaluateStatus(base, size, values) {
     var numFilled = countFilledSquares(values);
     return {
-        allFilled: countFilledSquares(values) === size * size,
+        allFilled: numFilled === size * size,
         conflicts: findAllConflicts(base, size, values),
         numFilled: numFilled
     };
