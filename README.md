@@ -59,3 +59,18 @@ The game has been tested on the following platforms/browsers:
    * Android 5 + Google Chrome 40
 
 I did not test iOS because I don't own such a device.
+
+## Roadmap
+
+The following items still need to be done (no particular order):
+   * Implement automated unit and integration tests for the game
+   * Improve the appearance of the grid (the squares aren't actually square)
+   * Make the end game more visually appealing (want to fade out the board and have a "You Win!" pop-up)
+   * Support mobile devices in landscape mode (need to either mode buttons automatically to left or right of board, or at least give player the option to do so)
+   * Make the delete, reset, and new game buttons the same size
+   * Load new games from a REST service instead of having a single, hard-coded game
+   * Support boards of sizes other than 9x9
+   * Add doc comments to JS files
+   * Setup JSLint or a comparable tool in the build process
+   * Come up with better terminology for data model ("base" and "size" are confusing)
+   * Refactor source code (some duplicate logic exists in different places in main.js in order to get the game working by my deadline)
