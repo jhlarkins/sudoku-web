@@ -43,6 +43,13 @@ The source file server.js implements a simple node.js server that serves the out
 ```bash
 node src/server.js
 ```
+
+## How to Play
+
+Players select squares with either their mouse or touch screen. They can enter numbers using the on-screen keypad, and delete numbers with the on-screen delete button. The game also accepts number keys, backspace/delete, and arrows keys for navigation in browsers/platforms that support it.
+
+Numbers defined by the puzzle appear in bold. As the player enters more numbers, ones that conflict with other numbers appear in red and italics (for users with limited color vision). Once the player has filled in a non-conflicting number for every square, the game ends.
+
 ## Browser Support
 
 The game has been tested on the following platforms/browsers:
