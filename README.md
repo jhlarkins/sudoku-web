@@ -5,20 +5,20 @@ This project is a Sudoku game for web browsers.
 ## Dependencies
 
 This project has the following dependencies:
-    * Node.js (http://nodejs.org) - for many other dependencies and running the test server
-    * Jade (http://jade-lang.com) - for generating the HTML from template files
-    * Sass (http://sass-lang.com) - for generating CSS
-    * Browserify (http://browserify.org) - for building client-side JS modules
-    * Watchify (https://github.com/substack/watchify) - for continuously building Browserify modules
-    * jquery-browserify (https://www.npmjs.com/package/jquery-browserify) - for using jQuery is Browerify modules
-    * Express (http://expressjs.com) - for implementingt the test server
-    * Express Compression (https://github.com/expressjs/compression) - for gzipping the test server responses
+   * Node.js (http://nodejs.org) - for many other dependencies and running the test server
+   * Jade (http://jade-lang.com) - for generating the HTML from template files
+   * Sass (http://sass-lang.com) - for generating CSS
+   * Browserify (http://browserify.org) - for building client-side JS modules
+   * Watchify (https://github.com/substack/watchify) - for continuously building Browserify modules
+   * jquery-browserify (https://www.npmjs.com/package/jquery-browserify) - for using jQuery is Browerify modules
+   * Express (http://expressjs.com) - for implementingt the test server
+   * Express Compression (https://github.com/expressjs/compression) - for gzipping the test server responses
 
 ## Design
 
 The game contains two major components:
-    * sudoku.js
-    * main.js
+   * sudoku.js
+   * main.js
 
 sudoku.js exports a factory method for creating Sudoku board objects. It tracks the state of the game board and evaluates whether the player has finishes and what squares are in conflict.
 
