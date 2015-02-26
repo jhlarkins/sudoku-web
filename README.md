@@ -43,3 +43,12 @@ The source file server.js implements a simple node.js server that serves the out
 ```bash
 node src/server.js
 ```
+## Browser Support
+
+The game has been tested on the following platforms/browsers:
+   * Linux Mint 17.1 + Firefox 35
+   * Windows 7 + Internet Explorer 11
+   * Windows 7 + Google Chrome 40
+   * Android 5 + Google Chrome 40
+
+I did not test iOS because I don't own such a device.
