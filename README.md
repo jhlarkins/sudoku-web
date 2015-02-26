@@ -5,8 +5,8 @@ This project is a Sudoku game for web browsers.
 ## Design
 
 The game contains two major components:
-   * sudoku.js
-   * main.js
+    * sudoku.js
+    * main.js
 
 sudoku.js exports a factory method for creating Sudoku board objects. It tracks the state of the game board and evaluates whether the player has finishes and what squares are in conflict.
 
@@ -21,5 +21,13 @@ To build the game, run:
 ```
 
 The two key options are:
-   * --debug: When set, the output of the build is optimized for human readability
-   * --watch: When set, the script keeps running, updating the output of the build when a source file changes. Use CTRL+C to close
+    * --debug: When set, the output of the build is optimized for human readability
+    * --watch: When set, the script keeps running, updating the output of the build when a source file changes. Use CTRL+C to close
+
+## Testing
+
+The source file server.js implements a simple node.js server that serves the output of the build. To run:
+
+```bash
+node src/server.js
+```
